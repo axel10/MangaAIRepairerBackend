@@ -7,6 +7,10 @@ import os
 import sys
 import datetime
 import subprocess
+import logging
+from flask.logging import default_handler
+
+
 
 def get_current_exe_path():
     if getattr(sys, 'frozen', False):  # 检查是否使用了pyinstaller打包
@@ -29,7 +33,8 @@ def run_exe_command(command):
     stdout, stderr = process.communicate()
     
     # 输出结果
-    print(stdout.decode('utf-8'))
+    print(stdout.decode('gbk'))
+    print(stderr.decode('gbk'))
     
 
 
@@ -53,7 +58,7 @@ def image_to_base64(image_path):
 def handle_img():
     json = request.get_json()
     data = json["data"]
-    level = int(json.get('level',2))
+    scale = int(json.get('scale',2))
     data = data.split(',')[1]
     if not data:
         return "缺少数据"
@@ -66,14 +71,20 @@ def handle_img():
     image.save(o_img_path)
     exe_path = os.path.join(get_current_exe_path(),"realesrgan-ncnn-vulkan-20220424-windows","realesrgan-ncnn-vulkan.exe")
     dist_img_path = o_img_path+"_dist.jpg"
-    ffmpeg_command = f'{exe_path} -i {o_img_path} -o {dist_img_path} -s {level}'
-    run_exe_command(ffmpeg_command)
+    esrgan_command = f'"{exe_path}" -i {o_img_path} -o {dist_img_path} -s {scale}'
+    print(esrgan_command)
+    run_exe_command(esrgan_command)
     dist_data = image_to_base64(dist_img_path)
     
     os.remove(dist_img_path)
     os.remove(o_img_path)
     
     return dist_data
+
+# log = logging.getLogger('werkzeug')
+# log.setLevel(logging.WARNING)
+
+
 
 if __name__ == "__main__":
     app.run(port=31485)

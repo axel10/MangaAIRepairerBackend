@@ -2,3 +2,6 @@ __pycache__
 build
 dist
 venv
+
+*.rar
+*.zip
