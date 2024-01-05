@@ -47,12 +47,12 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello, World!"
+    return "pong"
 
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
-        return encoded_string.decode("utf-8")
+        return encoded_string.decode("utf-8") 
 
 @app.route('/handle_img',methods=['POST'])
 def handle_img():
@@ -72,7 +72,6 @@ def handle_img():
     exe_path = os.path.join(get_current_exe_path(),"realesrgan-ncnn-vulkan-20220424-windows","realesrgan-ncnn-vulkan.exe")
     dist_img_path = o_img_path+"_dist.jpg"
     esrgan_command = f'"{exe_path}" -i {o_img_path} -o {dist_img_path} -s {scale}'
-    print(esrgan_command)
     run_exe_command(esrgan_command)
     dist_data = image_to_base64(dist_img_path)
     
@@ -81,8 +80,8 @@ def handle_img():
     
     return dist_data
 
-# log = logging.getLogger('werkzeug')
-# log.setLevel(logging.WARNING)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.WARNING)
 
 
 
