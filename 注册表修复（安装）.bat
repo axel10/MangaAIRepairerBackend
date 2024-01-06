@@ -25,5 +25,5 @@ reg add HKEY_CLASSES_ROOT\mangaAIRepairerBackend\shell\open\command /ve /d "%exe
 
 
 REM 添加成功，等待用户按下任意键退出脚本
-echo Done. Press any key to exit
-pause >nul
+
+pause
