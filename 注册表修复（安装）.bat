@@ -1,5 +1,5 @@
 @echo off
-set "exePath=%~dp0\app.exe"
+set "exePath=%~dp0\manga_ai_repairer_backend.exe"
 
 REM 检查是否以管理员权限运行脚本
 >nul 2>&1 "%SYSTEMROOT%\System32\cacls.exe" "%SYSTEMROOT%\System32\config\system"

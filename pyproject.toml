@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "manga-ai-repairer-backend"
-version = "0.3.0"
+version = "0.4.0"
 description = ""
 authors = ["laoliu"]
 readme = "README.md"

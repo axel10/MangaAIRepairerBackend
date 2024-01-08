@@ -1,4 +1,4 @@
-import time
+import shutil
 from flask import Flask, request, send_file
 import tempfile
 import base64
@@ -55,18 +55,16 @@ def run_exe_command(command):
 
 
 temp_dir = os.path.join(tempfile.gettempdir(), "my_manga_repairer")
+shutil.rmtree(temp_dir)
+os.makedirs(temp_dir)
+
+app = Flask(__name__)
 
 def delete_temp(token):
     o_img_path = os.path.join(temp_dir, token + ".jpg")
     dist_img_path = os.path.join(temp_dir,token+'.jpg_dist.jpg')
     os.remove(o_img_path)
     os.remove(dist_img_path)
-
-
-if not os.path.exists(temp_dir):
-    os.makedirs(temp_dir)
-app = Flask(__name__)
-
 
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
@@ -94,6 +92,8 @@ def handle_img():
     json = request.get_json()
     data = json["data"]
     scale = int(json.get("scale", 4))
+    model = json.get("model",'realesr-animevideov3')
+    
     data = data.split(",")[1]
     if not data:
         return "缺少数据"
@@ -114,7 +114,7 @@ def handle_img():
     )
     dist_img_path = o_img_path + "_dist.jpg"
     esrgan_command = (
-        f'"{exe_path}" -i {o_img_path} -o {dist_img_path} -s {scale} -f ext/jpg'
+        f'"{exe_path}" -i {o_img_path} -o {dist_img_path} -s {scale} -f ext/jpg -n {model}'
     )
     run_exe_command(esrgan_command)
 
